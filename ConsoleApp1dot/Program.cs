@@ -7,26 +7,11 @@ using System.Runtime.CompilerServices;
 using System.Security.Principal;
 
 
-// Create bank account
-BankAccount account = new BankAccount();
+Func<decimal, decimal> transactionFee =
+    amount => amount * 0.02m;
 
-// Create subscribers
-SmsService sms = new SmsService();
-EmailService email = new EmailService();
-AuditService audit = new AuditService();
+decimal amount = 1000m;
 
-// Subscribe to event
-account.MoneyTransferred += sms.SendSms;
-account.MoneyTransferred += email.SendEmail;
-account.MoneyTransferred += audit.LogTransaction;
+decimal fee = transactionFee(amount);
 
-// Perform transaction
-account.Transfer(500);
-
-// Unsubscribe email service
-account.MoneyTransferred -= email.SendEmail;
-
-Console.WriteLine("\nSecond transaction:");
-
-// Only SMS and Audit receive this event
-account.Transfer(200);
+Console.WriteLine($"Transaction fee: {fee}");
